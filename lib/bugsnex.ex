@@ -19,10 +19,14 @@ defmodule Bugsnex do
   end
 
   def process_url(endpoint) do
-    Bugsnex.api <> endpoint
+    Application.fetch_env!(:bugsnex, :api_endpoint) <> endpoint
+  end
+
+  def process_request_headers(headers) do
+    Dict.put(headers, :"Authorization", "token " <> Application.fetch_env!(:bugsnex, :api_token))
   end
 
   def process_response_body(body) do
-    JSEX.decode!(body, [{:label, :atom}])
+    Poison.decode!(body, [{:label, :atom}])
   end
 end
