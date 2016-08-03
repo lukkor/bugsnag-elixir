@@ -14,7 +14,7 @@ defmodule Bugsnex.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison],
+    [applications: [:logger, :httpoison, :exconstructor],
      mod: {Bugsnex, []}]
   end
 
@@ -29,6 +29,8 @@ defmodule Bugsnex.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:httpoison, "~> 0.9.0"},
-     {:poison, "~> 2.0"}]
+     {:poison, "~> 2.0"},
+     {:exconstructor, "~> 1.0.2"},
+     {:credo, "~> 0.4", only: [:dev, :test]}]
   end
 end

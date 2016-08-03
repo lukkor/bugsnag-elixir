@@ -1,4 +1,13 @@
 defmodule Bugsnex do
+  @moduledoc """
+  Base module to access Bugsnag Data access API.
+
+  ## Dependencies
+
+    - HTTPoison: used to request Bugsnag API
+    - Poison: used to decode JSON response
+  """
+
   use Application
   use HTTPoison.Base
 
@@ -18,6 +27,11 @@ defmodule Bugsnex do
     Supervisor.start_link(children, opts)
   end
 
+  @expected_fields ~w(
+    id name url created_at updated_at
+    account_creator billing_contact
+  )
+
   def process_url(endpoint) do
     Application.fetch_env!(:bugsnex, :api_endpoint) <> endpoint
   end
@@ -27,6 +41,8 @@ defmodule Bugsnex do
   end
 
   def process_response_body(body) do
-    Poison.decode!(body, [{:label, :atom}])
+    body
+    |> Poison.decode!([{:label, :atom}])
+    |> Map.take(@expected_fields)
   end
 end
