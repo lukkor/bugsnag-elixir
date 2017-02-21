@@ -7,7 +7,7 @@ defmodule Bugsnex.Mixfile do
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     deps: deps()]
   end
 
   # Configuration for the OTP application
@@ -28,9 +28,9 @@ defmodule Bugsnex.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:httpoison, "~> 0.9.0"},
-     {:poison, "~> 2.0"},
-     {:exconstructor, "~> 1.0.2"},
+    [{:httpoison, "~> 0.11.0"},
+     {:poison, "~> 3.1"},
+     {:exconstructor, "~> 1.1.0"},
      {:credo, "~> 0.4", only: [:dev, :test]}]
   end
 end
