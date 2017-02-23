@@ -9,6 +9,7 @@ defmodule Bugsnex.Worker do
     GenServer.start_link(__MODULE__, :ok, [])
   end
 
+  @spec notify(Exception.t) :: :ok
   def notify(exception) do
     GenServer.cast(__MODULE__, {:notify, exception})
   end
@@ -19,6 +20,7 @@ defmodule Bugsnex.Worker do
     {:ok, %{}}
   end
 
+  @spec handle_cast({:notify, Exception.t}, term) :: term
   def handle_cast({:notify, exception}, state) do
     {:ok, state}
   end
