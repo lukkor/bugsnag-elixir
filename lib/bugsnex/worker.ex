@@ -22,6 +22,10 @@ defmodule Bugsnex.Worker do
 
   @spec handle_cast({:notify, Exception.t}, term) :: term
   def handle_cast({:notify, exception}, state) do
+    exception
+    |> Bugsnex.Parser.parse
+    |> Bugsnex.Notifier.notify
+
     {:ok, state}
   end
 end
