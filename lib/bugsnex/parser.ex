@@ -37,7 +37,7 @@ defmodule Bugsnex.Parser do
       }
     }
   """
-  @spec parse(Exception.t, keyword) :: Bugsnex.Exception.t
+  @spec parse(Exception.t | none, keyword) :: {:ok, Bugsnex.Exception.t} | {:error, :no_exception}
   def parse(e, st \\ System.stacktrace)
   def parse(nil, _), do: {:error, :no_exception}
   def parse(e, st) do

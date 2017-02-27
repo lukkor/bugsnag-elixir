@@ -28,6 +28,7 @@ defmodule Bugsnex.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:credo, "~> 0.5", only: [:dev, :test]},
+     {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
      {:poison, "~> 3.0"}]
   end
 end

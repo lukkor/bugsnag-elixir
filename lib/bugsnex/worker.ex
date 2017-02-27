@@ -5,6 +5,7 @@ defmodule Bugsnex.Worker do
 
   # client API
 
+  @spec start_link :: GenServer.on_start
   def start_link do
     GenServer.start_link(__MODULE__, :ok, [])
   end
@@ -20,12 +21,8 @@ defmodule Bugsnex.Worker do
     {:ok, %{}}
   end
 
-  @spec handle_cast({:notify, Exception.t}, term) :: term
-  def handle_cast({:notify, exception}, state) do
-    exception
-    |> Bugsnex.Parser.parse
-    |> Bugsnex.Notifier.notify
-
-    {:ok, state}
+  @callback handle_cast({:notify, Exception.t}, term) :: {:noreply, term}
+  def handle_cast({:notify, _exception}, state) do
+    {:noreply, state}
   end
 end
