@@ -10,9 +10,41 @@ defmodule Bugsnex.Event do
             device: nil,
             metaData: %{}
 
+  @doc ~S"""
+  Create a new Bugsnex.Event structure
+
+    iex> Bugsnex.Event.new
+    %Bugsnex.Event{
+      payloadVersion: "2",
+      exceptions: [],
+      context: nil,
+      severity: "error",
+      user: %{},
+      app: nil,
+      device: nil,
+      metaData: %{}
+    }
+
+    iex> try do
+    ...>   raise ArgumentError, "Hello, world!"
+    ...> rescue
+    ...>   e in ArgumentError -> Bugsnex.Event.new(e)
+    ...> end
+    %Bugsnex.Event{
+      payloadVersion: "2",
+      exceptions: [%ArgumentError{message: "Hello, world!"}],
+      context: nil,
+      severity: "error",
+      user: %{},
+      app: nil,
+      device: nil,
+      metaData: %{}
+    }
+  """
   @spec new(Exception.t | nil) :: __MODULE__.t
-  def new(_exception \\ nil) do
-    %__MODULE__{}
+  def new, do: %__MODULE__{}
+  def new(exception) do
+    %__MODULE__{exceptions: [exception]}
   end
 
   @doc ~S"""
