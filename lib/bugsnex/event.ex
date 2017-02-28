@@ -43,9 +43,7 @@ defmodule Bugsnex.Event do
   """
   @spec new(Exception.t | nil) :: __MODULE__.t
   def new, do: %__MODULE__{}
-  def new(exception) do
-    %__MODULE__{exceptions: [exception]}
-  end
+  def new(exception), do: %__MODULE__{exceptions: [exception]}
 
   @doc ~S"""
   Add an exception to the event send to Bugsnag
@@ -210,7 +208,5 @@ defmodule Bugsnex.Event do
   def put_user({:error, reason}, _), do: {:error, reason}
   def put_user(event, nil), do: event
   def put_user(event, user) when map_size(user) == 0, do: event
-  def put_user(event, user) do
-    %__MODULE__{event | user: user}
-  end
+  def put_user(event, user), do: %__MODULE__{event | user: user}
 end
