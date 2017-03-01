@@ -1,4 +1,6 @@
 defmodule Bugsnex.Supervisor do
+  @moduledoc false
+
   use Supervisor
 
   @spec start_link :: Supervisor.on_start

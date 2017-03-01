@@ -9,6 +9,6 @@ defmodule Bugsnex do
     Bugsnex.Supervisor.start_link
   end
 
-  @spec notify(Exception.t) :: :ok
+  @spec notify(Exception.t | Bugsnex.Event.t | Bugsnex.Exception.t) :: :ok
   defdelegate notify(exception), to: Bugsnex.Worker
 end
