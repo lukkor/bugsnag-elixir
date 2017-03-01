@@ -1,4 +1,6 @@
 defmodule Bugsnex.Event do
+  @moduledoc false
+
   @derive [Poison.Encoder]
   @type t :: %__MODULE__{}
   defstruct payloadVersion: "2",
@@ -28,11 +30,11 @@ defmodule Bugsnex.Event do
     iex> try do
     ...>   raise ArgumentError, "Hello, world!"
     ...> rescue
-    ...>   e in ArgumentError -> Bugsnex.Event.new(e)
+    ...>   e in ArgumentError -> Bugsnex.Event.new(e, [])
     ...> end
     %Bugsnex.Event{
       payloadVersion: "2",
-      exceptions: [%ArgumentError{message: "Hello, world!"}],
+      exceptions: [%Bugsnex.Exception{errorClass: ArgumentError, message: "Hello, world!", stacktrace: []}],
       context: nil,
       severity: "error",
       user: %{},
@@ -43,7 +45,9 @@ defmodule Bugsnex.Event do
   """
   @spec new(Exception.t | nil) :: __MODULE__.t
   def new, do: %__MODULE__{}
-  def new(exception), do: %__MODULE__{exceptions: [exception]}
+  def new(exception, stacktrace \\ System.stacktrace) do
+    %__MODULE__{exceptions: [Bugsnex.Exception.new(exception, stacktrace)]}
+  end
 
   @doc ~S"""
   Add an exception to the event send to Bugsnag
@@ -69,11 +73,11 @@ defmodule Bugsnex.Event do
     iex> try do
     ...>   raise ArgumentError, "Hello, world!"
     ...> rescue
-    ...>   e in ArgumentError -> Bugsnex.Event.new |> Bugsnex.Event.put_exception(e)
+    ...>   e in ArgumentError -> Bugsnex.Event.new |> Bugsnex.Event.put_exception(e, [])
     ...> end
     %Bugsnex.Event{
       payloadVersion: "2",
-      exceptions: [%ArgumentError{message: "Hello, world!"}],
+      exceptions: [%Bugsnex.Exception{errorClass: ArgumentError, message: "Hello, world!", stacktrace: []}],
       context: nil,
       severity: "error",
       user: %{},
@@ -83,12 +87,13 @@ defmodule Bugsnex.Event do
     }
   """
   @spec put_exception(__MODULE__.t, Exception.t) :: __MODULE__.t | {:error, :no_exception}
-  def put_exception(nil, _), do: {:error, :no_event}
-  def put_exception({:error, reason}, _), do: {:error, reason}
-  def put_exception(event, nil), do: event
-  def put_exception(event, exception) do
+  def put_exception(event, exception, stacktrace \\ System.stacktrace)
+  def put_exception(nil, _, _), do: {:error, :no_event}
+  def put_exception({:error, reason}, _, _), do: {:error, reason}
+  def put_exception(event, nil, _), do: event
+  def put_exception(event, exception, stacktrace) do
     %__MODULE__{exceptions: exceptions} = event
-    %__MODULE__{event | exceptions: [exception | exceptions]}
+    %__MODULE__{event | exceptions: [Bugsnex.Exception.new(exception, stacktrace) | exceptions]}
   end
 
   @doc ~S"""

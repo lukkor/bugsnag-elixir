@@ -33,23 +33,21 @@ defmodule Bugsnex.Exception do
     %Bugsnex.Exception{
       errorClass: e.__struct__,
       message: Exception.message(e),
-      stacktrace: do_parse_stacktrace(st)
+      stacktrace: stacktrace(st)
     }
   end
 
-  defp do_parse_stacktrace(st) do
-    st |> Enum.map(&do_parse_stacktrace_line/1)
+  defp stacktrace(st) do
+    st |> Enum.map(&stacktrace_line/1)
   end
 
-  defp do_parse_stacktrace_line(nil) do
-    %{file: "unknown", lineNumber: 0, columnNumber: 0, method: "unknown"}
+  @default_stacktrace_line %{file: "unknown", lineNumber: 0, columnNumber: 0, method: "unknown"}
+  defp stacktrace_line(nil), do: @default_stacktrace_line
+  defp stacktrace_line({_module, function_name, args, [file: file, line: line_number]}) do
+    %{file: List.to_string(file), lineNumber: line_number, columnNumber: 0, method: function(function_name, args)}
   end
+  defp stacktrace_line(_), do: @default_stacktrace_line
 
-  defp do_parse_stacktrace_line({_module, function, _args, [file: file, line: line_number]}) do
-    %{file: file, lineNumber: line_number, columnNumber: 0, method: function}
-  end
-
-  defp do_parse_stacktrace_line(_) do
-    %{file: "unknown", lineNumber: 0, columnNumber: 0, method: "unknown"}
-  end
+  defp function(function_name, args) when is_integer(args), do: "#{function_name}/#{args}"
+  defp function(function_name, _), do: function_name
 end
