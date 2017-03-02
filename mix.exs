@@ -14,7 +14,7 @@ defmodule Bugsnex.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger], mod: {Bugsnex, []}]
+    [applications: [:logger, :inets, :ssl], mod: {Bugsnex, []}]
   end
 
   # Dependencies can be Hex packages:

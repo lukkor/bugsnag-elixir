@@ -45,8 +45,12 @@ defmodule Bugsnex.Event do
   """
   @spec new(Exception.t | nil) :: __MODULE__.t
   def new, do: %__MODULE__{}
-  def new(exception, stacktrace \\ System.stacktrace) do
-    %__MODULE__{exceptions: [Bugsnex.Exception.new(exception, stacktrace)]}
+  def new(exception, stacktrace \\ System.stacktrace)
+  def new(exception = %Bugsnex.Exception{}, _) do
+    %__MODULE__{exceptions: [exception]}
+  end
+  def new(exception, stacktrace) do
+    new(Bugsnex.Exception.new(exception, stacktrace))
   end
 
   @doc ~S"""
