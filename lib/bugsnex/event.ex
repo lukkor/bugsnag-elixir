@@ -217,5 +217,17 @@ defmodule Bugsnex.Event do
   def put_user({:error, reason}, _), do: {:error, reason}
   def put_user(event, nil), do: event
   def put_user(event, user) when map_size(user) == 0, do: event
-  def put_user(event, user), do: %__MODULE__{event | user: user}
+  def put_user(event, user = %{id: _, name: _, emai: _}), do: %__MODULE__{event | user: user}
+
+  @doc ~S"""
+  Add app info into Bugsnex event
+  """
+  @spec put_app(__MODULE__.t, keyword) :: __MODULE__.t | {:error, :no_app}
+  def put_app(event, app = %{version: _, releaseStage: _, type: _}), do: %__MODULE__{event | app: app}
+
+  @doc ~S"""
+  Add device info into Bugsnex event
+  """
+  @spec put_device(__MODULE__.t, keyword) :: __MODULE__.t | {:error, :no_device}
+  def put_device(event, device = %{osVersion: _, hostname: _}), do: %__MODULE__{event | device: device}
 end
