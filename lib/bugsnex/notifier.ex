@@ -1,15 +1,19 @@
 defmodule Bugsnex.Notifier do
   @moduledoc false
 
+  require Logger
+
   @endpoint 'https://notify.bugsnag.com'
   @content_type 'application/json'
   @http_options [{:ssl, [{:verify, :verify_none}]}]
 
-  @api_key "c9d60ae4c7e70c4b6c4ebd3e8056d2b8"
-
   @spec notify(Bugsnex.Event.t) :: term
   def notify(event) do
-    {:ok, body} = Poison.encode(event)
-    :httpc.request(:post, {@endpoint, [], @content_type, body}, @http_options, [])
+    with {:ok, body} <- Poison.encode(Bugsnex.Payload.new(event)) do
+      case :httpc.request(:post, {@endpoint, [], @content_type, body}, @http_options, []) do
+        {:ok, {status_line, _, _}} -> Logger.info(status_line |> Tuple.to_list |> Enum.join(" "))
+        {:error, error} -> Logger.debug(error)
+      end
+    end
   end
 end

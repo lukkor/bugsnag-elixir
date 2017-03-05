@@ -188,25 +188,39 @@ defmodule Bugsnex.Event do
       metaData: %{}
     }
 
-    iex> Bugsnex.Event.new |> Bugsnex.Event.put_user(%{key: 1})
+    iex> Bugsnex.Event.new |> Bugsnex.Event.put_user(%{id: 1, name: "JCVD", email: "jc@vd.com"})
     %Bugsnex.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
       severity: "error",
-      user: %{key: 1},
+      user: %{id: 1, name: "JCVD", email: "jc@vd.com"},
       app: nil,
       device: nil,
       metaData: %{}
     }
 
-    iex> Bugsnex.Event.new |> Bugsnex.Event.put_user(%{key: 1}) |> Bugsnex.Event.put_user(%{key: 2})
+    iex> Bugsnex.Event.new
+    ...> |> Bugsnex.Event.put_user(%{id: 1, name: "JCVD", email: "jc@vd.com"})
+    ...> |> Bugsnex.Event.put_user(%{id: 2, name: "JCVD", email: "jc@vd.com"})
     %Bugsnex.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
       severity: "error",
-      user: %{key: 2},
+      user: %{id: 2, name: "JCVD", email: "jc@vd.com"},
+      app: nil,
+      device: nil,
+      metaData: %{}
+    }
+
+    iex> Bugsnex.Event.new |> Bugsnex.Event.put_user(%{id: 1, fullname: "JCVD", email: "jc@vd.com"})
+    %Bugsnex.Event{
+      payloadVersion: "2",
+      exceptions: [],
+      context: nil,
+      severity: "error",
+      user: %{},
       app: nil,
       device: nil,
       metaData: %{}
@@ -216,18 +230,40 @@ defmodule Bugsnex.Event do
   def put_user(nil, _), do: {:error, :no_event}
   def put_user({:error, reason}, _), do: {:error, reason}
   def put_user(event, nil), do: event
-  def put_user(event, user) when map_size(user) == 0, do: event
-  def put_user(event, user = %{id: _, name: _, emai: _}), do: %__MODULE__{event | user: user}
+  def put_user(event, user = %{id: _, name: _, email: _}), do: %__MODULE__{event | user: user}
+  def put_user(event, %{}), do: event
 
   @doc ~S"""
   Add app info into Bugsnex event
+
+    iex> Bugsnex.Event.put_app(nil, nil)
+    {:error, :no_event}
+
+    iex> Bugsnex.Event.put_app({:error, :no_event}, nil)
+    {:error, :no_event}
   """
   @spec put_app(__MODULE__.t, keyword) :: __MODULE__.t | {:error, :no_app}
+  def put_app(nil, _), do: {:error, :no_event}
+  def put_app({:error, reason}, _), do: {:error, reason}
+  def put_app(event, nil), do: event
+  def put_app(event, app) when map_size(app) == 0, do: event
   def put_app(event, app = %{version: _, releaseStage: _, type: _}), do: %__MODULE__{event | app: app}
+  def put_app(event, %{}), do: event
 
   @doc ~S"""
   Add device info into Bugsnex event
+
+    iex> Bugsnex.Event.put_device(nil, nil)
+    {:error, :no_event}
+
+    iex> Bugsnex.Event.put_device({:error, :no_event}, nil)
+    {:error, :no_event}
   """
   @spec put_device(__MODULE__.t, keyword) :: __MODULE__.t | {:error, :no_device}
+  def put_device(nil, _), do: {:error, :no_event}
+  def put_device({:error, reason}, _), do: {:error, reason}
+  def put_device(event, nil), do: event
+  def put_device(event, device) when map_size(device) == 0, do: event
   def put_device(event, device = %{osVersion: _, hostname: _}), do: %__MODULE__{event | device: device}
+  def put_device(event, %{}), do: event
 end
