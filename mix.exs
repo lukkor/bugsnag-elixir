@@ -3,10 +3,12 @@ defmodule Bugsnex.Mixfile do
 
   def project do
     [app: :bugsnex,
-     version: "0.0.1",
+     version: "0.1.0",
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     description: description(),
+     package: package(),
      deps: deps()]
   end
 
@@ -29,6 +31,21 @@ defmodule Bugsnex.Mixfile do
   defp deps do
     [{:credo, "~> 0.5", only: [:dev, :test]},
      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+     {:ex_doc, "~> 0.14", only: :dev, runtime: false},
      {:poison, "~> 3.0"}]
+  end
+
+  defp description do
+    """
+    Error reporter for Bugsnag API
+    """
+  end
+
+  defp package do
+    [name: :bugsnex,
+     files: ~w(lib mix.exs README.md),
+     maintainers: ["Ludovic Vielle"],
+     licenses: ["MIT License"],
+     links: %{"GitHub" => "https://github.com/Lukkor/bugsnex"}]
   end
 end
