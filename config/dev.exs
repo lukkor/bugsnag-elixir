@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :bugsnex,
+config :bugsnag_elixir,
   api_token: System.get_env("BUGSNAG_API_TOKEN"),
   release_stage: 'dev',
   auto_notify: true,

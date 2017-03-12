@@ -1,4 +1,4 @@
-defmodule Bugsnex.Payload do
+defmodule BugsnagElixir.Payload do
   @moduledoc false
 
   @derive [Poison.Encoder]
@@ -7,11 +7,11 @@ defmodule Bugsnex.Payload do
             notifier: %{},
             events: []
 
-  @name "Bugsnex"
+  @name "bugsnag-elixir"
   @version Mix.Project.config[:version]
-  @url "https://github.com/Lukkor/bugsnex"
+  @url "https://github.com/Lukkor/bugsnag-elixir"
 
-  @api_key Application.get_env(:bugsnex, :api_token, "c9d60ae4c7e70c4b6c4ebd3e8056d2b8")
+  @api_key Application.get_env(:bugsnag_elixir, :api_token, "c9d60ae4c7e70c4b6c4ebd3e8056d2b8")
 
   def new(events) when is_list(events) do
     %__MODULE__{

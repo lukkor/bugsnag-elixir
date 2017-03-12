@@ -1,4 +1,4 @@
-defmodule Bugsnex.Exception do
+defmodule BugsnagElixir.Exception do
   @moduledoc false
 
   @derive [Poison.Encoder]
@@ -6,17 +6,17 @@ defmodule Bugsnex.Exception do
   defstruct [:errorClass, :message, :stacktrace]
 
   @doc ~S"""
-  Create a Bugsnex.Exception struct given the exception
+  Create a BugsnagElixir.Exception struct given the exception
 
-    iex> Bugsnex.Exception.new(nil)
-    %Bugsnex.Exception{}
+    iex> BugsnagElixir.Exception.new(nil)
+    %BugsnagElixir.Exception{}
 
     iex> try do
     ...>   raise ArgumentError, "Wrong argument!"
     ...> rescue
-    ...>   e in ArgumentError -> Bugsnex.Exception.new(e, [])
+    ...>   e in ArgumentError -> BugsnagElixir.Exception.new(e, [])
     ...> end
-    %Bugsnex.Exception{
+    %BugsnagElixir.Exception{
       errorClass: ArgumentError,
       message: "Wrong argument!",
       stacktrace: []
@@ -30,7 +30,7 @@ defmodule Bugsnex.Exception do
   end
 
   defp do_parse(e, st) do
-    %Bugsnex.Exception{
+    %BugsnagElixir.Exception{
       errorClass: e.__struct__,
       message: Exception.message(e),
       stacktrace: stacktrace(st)

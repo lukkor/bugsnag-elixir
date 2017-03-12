@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :bugsnex, key: :value
+#     config :bugsnag_elixir, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:bugsnex, :key)
+#     Application.get_env(:bugsnag_elixir, :key)
 #
 # Or configure a 3rd-party app:
 #

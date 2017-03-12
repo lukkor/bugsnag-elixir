@@ -1,4 +1,4 @@
-defmodule Bugsnex.Event do
+defmodule BugsnagElixir.Event do
   @moduledoc false
 
   @derive [Poison.Encoder]
@@ -13,10 +13,10 @@ defmodule Bugsnex.Event do
             metaData: %{}
 
   @doc ~S"""
-  Create a new Bugsnex.Event structure
+  Create a new BugsnagElixir.Event structure
 
-    iex> Bugsnex.Event.new
-    %Bugsnex.Event{
+    iex> BugsnagElixir.Event.new
+    %BugsnagElixir.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
@@ -30,11 +30,11 @@ defmodule Bugsnex.Event do
     iex> try do
     ...>   raise ArgumentError, "Hello, world!"
     ...> rescue
-    ...>   e in ArgumentError -> Bugsnex.Event.new(e, [])
+    ...>   e in ArgumentError -> BugsnagElixir.Event.new(e, [])
     ...> end
-    %Bugsnex.Event{
+    %BugsnagElixir.Event{
       payloadVersion: "2",
-      exceptions: [%Bugsnex.Exception{errorClass: ArgumentError, message: "Hello, world!", stacktrace: []}],
+      exceptions: [%BugsnagElixir.Exception{errorClass: ArgumentError, message: "Hello, world!", stacktrace: []}],
       context: nil,
       severity: "error",
       user: %{},
@@ -46,24 +46,24 @@ defmodule Bugsnex.Event do
   @spec new(Exception.t | nil) :: __MODULE__.t
   def new, do: %__MODULE__{}
   def new(exception, stacktrace \\ System.stacktrace)
-  def new(exception = %Bugsnex.Exception{}, _) do
+  def new(exception = %BugsnagElixir.Exception{}, _) do
     %__MODULE__{exceptions: [exception]}
   end
   def new(exception, stacktrace) do
-    new(Bugsnex.Exception.new(exception, stacktrace))
+    new(BugsnagElixir.Exception.new(exception, stacktrace))
   end
 
   @doc ~S"""
   Add an exception to the event send to Bugsnag
 
-    iex> Bugsnex.Event.put_exception(nil, nil)
+    iex> BugsnagElixir.Event.put_exception(nil, nil)
     {:error, :no_event}
 
-    iex> Bugsnex.Event.put_exception({:error, :no_event}, nil)
+    iex> BugsnagElixir.Event.put_exception({:error, :no_event}, nil)
     {:error, :no_event}
 
-    iex> Bugsnex.Event.new |> Bugsnex.Event.put_exception(nil)
-    %Bugsnex.Event{
+    iex> BugsnagElixir.Event.new |> BugsnagElixir.Event.put_exception(nil)
+    %BugsnagElixir.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
@@ -77,11 +77,11 @@ defmodule Bugsnex.Event do
     iex> try do
     ...>   raise ArgumentError, "Hello, world!"
     ...> rescue
-    ...>   e in ArgumentError -> Bugsnex.Event.new |> Bugsnex.Event.put_exception(e, [])
+    ...>   e in ArgumentError -> BugsnagElixir.Event.new |> BugsnagElixir.Event.put_exception(e, [])
     ...> end
-    %Bugsnex.Event{
+    %BugsnagElixir.Event{
       payloadVersion: "2",
-      exceptions: [%Bugsnex.Exception{errorClass: ArgumentError, message: "Hello, world!", stacktrace: []}],
+      exceptions: [%BugsnagElixir.Exception{errorClass: ArgumentError, message: "Hello, world!", stacktrace: []}],
       context: nil,
       severity: "error",
       user: %{},
@@ -97,20 +97,20 @@ defmodule Bugsnex.Event do
   def put_exception(event, nil, _), do: event
   def put_exception(event, exception, stacktrace) do
     %__MODULE__{exceptions: exceptions} = event
-    %__MODULE__{event | exceptions: [Bugsnex.Exception.new(exception, stacktrace) | exceptions]}
+    %__MODULE__{event | exceptions: [BugsnagElixir.Exception.new(exception, stacktrace) | exceptions]}
   end
 
   @doc ~S"""
   Add metadata to the event send to Bugsnag
 
-    iex> Bugsnex.Event.put_metadata(nil, nil)
+    iex> BugsnagElixir.Event.put_metadata(nil, nil)
     {:error, :no_event}
 
-    iex> Bugsnex.Event.put_metadata({:error, :no_event}, nil)
+    iex> BugsnagElixir.Event.put_metadata({:error, :no_event}, nil)
     {:error, :no_event}
 
-    iex> Bugsnex.Event.new |> Bugsnex.Event.put_metadata(nil)
-    %Bugsnex.Event{
+    iex> BugsnagElixir.Event.new |> BugsnagElixir.Event.put_metadata(nil)
+    %BugsnagElixir.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
@@ -121,8 +121,8 @@ defmodule Bugsnex.Event do
       metaData: %{}
     }
 
-    iex> Bugsnex.Event.new |> Bugsnex.Event.put_metadata(%{})
-    %Bugsnex.Event{
+    iex> BugsnagElixir.Event.new |> BugsnagElixir.Event.put_metadata(%{})
+    %BugsnagElixir.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
@@ -133,8 +133,8 @@ defmodule Bugsnex.Event do
       metaData: %{}
     }
 
-    iex> Bugsnex.Event.new |> Bugsnex.Event.put_metadata(%{key: 1})
-    %Bugsnex.Event{
+    iex> BugsnagElixir.Event.new |> BugsnagElixir.Event.put_metadata(%{key: 1})
+    %BugsnagElixir.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
@@ -158,14 +158,14 @@ defmodule Bugsnex.Event do
   @doc ~S"""
   Add user info to the event send to Bugsnag
 
-    iex> Bugsnex.Event.put_user(nil, nil)
+    iex> BugsnagElixir.Event.put_user(nil, nil)
     {:error, :no_event}
 
-    iex> Bugsnex.Event.put_user({:error, :no_event}, nil)
+    iex> BugsnagElixir.Event.put_user({:error, :no_event}, nil)
     {:error, :no_event}
 
-    iex> Bugsnex.Event.new |> Bugsnex.Event.put_user(nil)
-    %Bugsnex.Event{
+    iex> BugsnagElixir.Event.new |> BugsnagElixir.Event.put_user(nil)
+    %BugsnagElixir.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
@@ -176,8 +176,8 @@ defmodule Bugsnex.Event do
       metaData: %{}
     }
 
-    iex> Bugsnex.Event.new |> Bugsnex.Event.put_user(%{})
-    %Bugsnex.Event{
+    iex> BugsnagElixir.Event.new |> BugsnagElixir.Event.put_user(%{})
+    %BugsnagElixir.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
@@ -188,8 +188,8 @@ defmodule Bugsnex.Event do
       metaData: %{}
     }
 
-    iex> Bugsnex.Event.new |> Bugsnex.Event.put_user(%{id: 1, name: "JCVD", email: "jc@vd.com"})
-    %Bugsnex.Event{
+    iex> BugsnagElixir.Event.new |> BugsnagElixir.Event.put_user(%{id: 1, name: "JCVD", email: "jc@vd.com"})
+    %BugsnagElixir.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
@@ -200,10 +200,10 @@ defmodule Bugsnex.Event do
       metaData: %{}
     }
 
-    iex> Bugsnex.Event.new
-    ...> |> Bugsnex.Event.put_user(%{id: 1, name: "JCVD", email: "jc@vd.com"})
-    ...> |> Bugsnex.Event.put_user(%{id: 2, name: "JCVD", email: "jc@vd.com"})
-    %Bugsnex.Event{
+    iex> BugsnagElixir.Event.new
+    ...> |> BugsnagElixir.Event.put_user(%{id: 1, name: "JCVD", email: "jc@vd.com"})
+    ...> |> BugsnagElixir.Event.put_user(%{id: 2, name: "JCVD", email: "jc@vd.com"})
+    %BugsnagElixir.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
@@ -214,8 +214,8 @@ defmodule Bugsnex.Event do
       metaData: %{}
     }
 
-    iex> Bugsnex.Event.new |> Bugsnex.Event.put_user(%{id: 1, fullname: "JCVD", email: "jc@vd.com"})
-    %Bugsnex.Event{
+    iex> BugsnagElixir.Event.new |> BugsnagElixir.Event.put_user(%{id: 1, fullname: "JCVD", email: "jc@vd.com"})
+    %BugsnagElixir.Event{
       payloadVersion: "2",
       exceptions: [],
       context: nil,
@@ -234,12 +234,12 @@ defmodule Bugsnex.Event do
   def put_user(event, %{}), do: event
 
   @doc ~S"""
-  Add app info into Bugsnex event
+  Add app info into BugsnagElixir event
 
-    iex> Bugsnex.Event.put_app(nil, nil)
+    iex> BugsnagElixir.Event.put_app(nil, nil)
     {:error, :no_event}
 
-    iex> Bugsnex.Event.put_app({:error, :no_event}, nil)
+    iex> BugsnagElixir.Event.put_app({:error, :no_event}, nil)
     {:error, :no_event}
   """
   @spec put_app(__MODULE__.t, keyword) :: __MODULE__.t | {:error, :no_app}
@@ -251,12 +251,12 @@ defmodule Bugsnex.Event do
   def put_app(event, %{}), do: event
 
   @doc ~S"""
-  Add device info into Bugsnex event
+  Add device info into BugsnagElixir event
 
-    iex> Bugsnex.Event.put_device(nil, nil)
+    iex> BugsnagElixir.Event.put_device(nil, nil)
     {:error, :no_event}
 
-    iex> Bugsnex.Event.put_device({:error, :no_event}, nil)
+    iex> BugsnagElixir.Event.put_device({:error, :no_event}, nil)
     {:error, :no_event}
   """
   @spec put_device(__MODULE__.t, keyword) :: __MODULE__.t | {:error, :no_device}

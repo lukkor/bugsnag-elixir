@@ -1,4 +1,4 @@
-defmodule Bugsnex.Supervisor do
+defmodule BugsnagElixir.Supervisor do
   @moduledoc false
 
   use Supervisor
@@ -8,8 +8,9 @@ defmodule Bugsnex.Supervisor do
     Supervisor.start_link(__MODULE__, [])
   end
 
+  @spec init(list) :: any
   def init([]) do
-    children = [worker(Bugsnex.Worker, [])]
+    children = [worker(BugsnagElixir.Worker, [])]
     supervise(children, strategy: :one_for_one)
   end
 end

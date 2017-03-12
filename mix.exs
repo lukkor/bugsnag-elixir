@@ -1,8 +1,8 @@
-defmodule Bugsnex.Mixfile do
+defmodule BugsnagElixir.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :bugsnex,
+    [app: :bugsnag_elixir,
      version: "0.1.0",
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
@@ -16,7 +16,7 @@ defmodule Bugsnex.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :inets, :ssl], mod: {Bugsnex, []}]
+    [applications: [:logger, :inets, :ssl], mod: {BugsnagElixir, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -42,10 +42,10 @@ defmodule Bugsnex.Mixfile do
   end
 
   defp package do
-    [name: :bugsnex,
+    [name: :bugsnag_elixir,
      files: ~w(lib mix.exs README.md),
      maintainers: ["Ludovic Vielle"],
      licenses: ["MIT License"],
-     links: %{"GitHub" => "https://github.com/Lukkor/bugsnex"}]
+     links: %{"GitHub" => "https://github.com/Lukkor/bugsnag-elixir"}]
   end
 end

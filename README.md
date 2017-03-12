@@ -15,7 +15,7 @@ The Bugsnag exception reporter for Elixir gives you instant notification of exce
 
 ## Contributing
 
-All contributors are welcome! For information on how to build, test and release `bugsnex`, see our [contributing guide](https://github.com/Lukkor/bugsnag-elixir/blob/master/CONTRIBUTING.md). Feel free to comment on [existing issues](https://github.com/Lukkor/bugsnag-elixir/issues) for clarification or starting points.
+All contributors are welcome! For information on how to build, test and release `bugsnag-elixir`, see our [contributing guide](https://github.com/Lukkor/bugsnag-elixir/blob/master/CONTRIBUTING.md). Feel free to comment on [existing issues](https://github.com/Lukkor/bugsnag-elixir/issues) for clarification or starting points.
 
 ## License
 
